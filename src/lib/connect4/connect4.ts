@@ -104,6 +104,7 @@ export function connects4Diagonal(board: Connect4Board, player: Connect4Player):
 	return false;
 }
 
+// TODO: Rename to C4.
 export interface Connect4 {
 	board: Connect4Board;
 	logs: Connect4Drop[];
