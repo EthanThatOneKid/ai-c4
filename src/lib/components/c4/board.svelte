@@ -91,18 +91,14 @@
 
 <table style:--color-p1={$store.settings[0].color} style:--color-p2={$store.settings[1].color}>
 	<tr>
-		<th>1</th>
-		<th>2</th>
-		<th>3</th>
-		<th>4</th>
-		<th>5</th>
-		<th>6</th>
-		<th>7</th>
+		{#each [1, 2, 3, 4, 5, 6, 7] as column}
+			<th class="cell-container">{column}</th>
+		{/each}
 	</tr>
 	{#each $store.board.toReversed() as row}
 		<tr>
 			{#each row as cell, columnIndex}
-				<td>
+				<td class="cell-container">
 					<div
 						class="cell"
 						class:player1={cell === 0}
@@ -112,6 +108,7 @@
 						on:keydown={handleColumnInput}
 						tabindex="0"
 						role="button"
+						style:margin="auto"
 					>
 						{makeC4BoardCellString(cell)}
 					</div>
@@ -142,5 +139,9 @@
 
 	.cell.player2 {
 		background-color: var(--color-p2);
+	}
+
+	th {
+		text-align: center;
 	}
 </style>
