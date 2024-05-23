@@ -41,6 +41,7 @@ export interface AlphabetaNode {
 
 export function example() {
 	// TODO: Make AlphabetaNode from C4Board state.
+	// TODO: Implement alphabeta pruning.
 	const node: AlphabetaNode = {
 		heuristicValue: 0,
 		isTerminal: false,
