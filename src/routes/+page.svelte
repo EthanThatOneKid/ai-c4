@@ -4,6 +4,7 @@
 
 <svelte:head>
 	<title>Connect 4 AI | etok.codes/ai-c4</title>
+	<meta name="description" content="Artificially intelligent Connect 4." />
 	<link
 		rel="stylesheet"
 		type="text/css"
