@@ -92,6 +92,7 @@
 						event.preventDefault();
 						handleColumnClick(columnIndex);
 					}}
+					on:contextmenu={(event) => event.preventDefault()}
 				>
 					<div class="cell" class:player1={cell === 0} class:player2={cell === 1}>
 						{makeC4BoardCellString(cell)}
