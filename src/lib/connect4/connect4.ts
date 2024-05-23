@@ -92,6 +92,10 @@ export interface Connect4Drop {
 	column?: number;
 }
 
+export function makeConnect4PlayerString(player: Connect4Player): string {
+	return player === Connect4Player.ONE ? '1' : '2';
+}
+
 export enum Connect4Player {
 	ONE = 0,
 	TWO = 1

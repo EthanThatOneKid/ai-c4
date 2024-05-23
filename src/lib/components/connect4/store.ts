@@ -7,11 +7,11 @@ export const connect4Store = writable<Connect4>({
 	settings: [
 		{
 			type: Connect4PlayerType.USER,
-			color: 'red'
+			color: '#ff0000'
 		},
 		{
 			type: Connect4PlayerType.AI,
-			color: 'yellow'
+			color: '#ffff00'
 		}
 	],
 	logs: []

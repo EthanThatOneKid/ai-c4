@@ -1,11 +1,12 @@
 <script lang="ts">
+	import { makeConnect4PlayerString } from '$lib/connect4';
 	import { connect4Store } from './store';
 </script>
 
 <table>
 	<thead>
 		<tr>
-			<th>#</th>
+			<th>Turn</th>
 			<th>Player</th>
 			<th>Column</th>
 		</tr>
@@ -14,7 +15,7 @@
 	{#each $connect4Store.logs as { column, player }, index}
 		<tr>
 			<td>{index + 1}</td>
-			<td>{player === 1 ? 'Player 1' : 'Player 2'}</td>
+			<td>{makeConnect4PlayerString(player)}</td>
 			<td>
 				{#if column === undefined}
 					Forfeit

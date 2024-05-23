@@ -54,8 +54,10 @@
 
 <style>
 	.cell {
-		width: 16px;
-		height: 16px;
+		display: grid;
+		place-items: center;
+		width: 2rem;
+		height: 2rem;
 		border-radius: 50%;
 	}
 
