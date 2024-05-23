@@ -9,6 +9,7 @@
 		makeC4PlayerString
 	} from '$lib/c4';
 	import { minimax } from '$lib/c4/ai';
+	import { onMount } from 'svelte';
 	import { restart, store } from './store';
 
 	// TODO: Fix confirmGameOverRestart bug.
@@ -23,7 +24,26 @@
 		}
 	}
 
-	function handleColumnClick(column: number) {
+	function handleColumnInput(event: PointerEvent) {
+		const element = document.elementFromPoint(event.clientX, event.clientY);
+		if (element === null) {
+			return;
+		}
+
+		const columnIndexString = element?.getAttribute('data-column-index');
+		if (columnIndexString === null) {
+			return;
+		}
+
+		const column = parseInt(columnIndexString, 10);
+		if (Number.isNaN(column)) {
+			return;
+		}
+
+		inputColumn(column);
+	}
+
+	function inputColumn(column: number) {
 		if ($store.winner !== undefined) {
 			confirmGameOverRestart();
 			return;
@@ -56,7 +76,7 @@
 					throw new Error('No best column found');
 				}
 
-				handleColumnClick(bestColumn);
+				inputColumn(bestColumn);
 				break;
 			}
 
@@ -67,10 +87,18 @@
 				}
 
 				const randomColumn = columns[Math.floor(Math.random() * columns.length)];
-				handleColumnClick(randomColumn);
+				inputColumn(randomColumn);
 				break;
 			}
 		}
+	});
+
+	onMount(() => {
+		document.addEventListener('pointerup', handleColumnInput);
+
+		return () => {
+			document.removeEventListener('pointerup', handleColumnInput);
+		};
 	});
 </script>
 
@@ -87,13 +115,7 @@
 	{#each $store.board.toReversed() as row}
 		<tr>
 			{#each row as cell, columnIndex}
-				<td
-					on:pointerup={(event) => {
-						event.preventDefault();
-						handleColumnClick(columnIndex);
-					}}
-					on:contextmenu={(event) => event.preventDefault()}
-				>
+				<td data-column-index={columnIndex}>
 					<div class="cell" class:player1={cell === 0} class:player2={cell === 1}>
 						{makeC4BoardCellString(cell)}
 					</div>
@@ -104,7 +126,7 @@
 </table>
 
 {#if $store.winner !== undefined}
-	<p>Player {$store.winner + 1} wins!</p>
+	<p>Player {makeC4PlayerString($store.winner)} wins!</p>
 {/if}
 
 <style>
