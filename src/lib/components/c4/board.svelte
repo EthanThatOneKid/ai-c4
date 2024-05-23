@@ -23,7 +23,22 @@
 		}
 	}
 
-	function handleColumnClick(column: number) {
+	function handleColumnInput(event: Event) {
+		event.preventDefault();
+		const columnString = (event.target as HTMLElement)?.getAttribute('data-column');
+		if (columnString === null) {
+			return;
+		}
+
+		const column = parseInt(columnString, 10);
+		if (Number.isNaN(column)) {
+			return;
+		}
+
+		inputColumn(column);
+	}
+
+	function inputColumn(column: number) {
 		if ($store.winner !== undefined) {
 			confirmGameOverRestart();
 			return;
@@ -56,7 +71,7 @@
 					throw new Error('No best column found');
 				}
 
-				handleColumnClick(bestColumn);
+				inputColumn(bestColumn);
 				break;
 			}
 
@@ -67,7 +82,7 @@
 				}
 
 				const randomColumn = columns[Math.floor(Math.random() * columns.length)];
-				handleColumnClick(randomColumn);
+				inputColumn(randomColumn);
 				break;
 			}
 		}
@@ -76,19 +91,25 @@
 
 <table style:--color-p1={$store.settings[0].color} style:--color-p2={$store.settings[1].color}>
 	<tr>
-		<th>1</th>
-		<th>2</th>
-		<th>3</th>
-		<th>4</th>
-		<th>5</th>
-		<th>6</th>
-		<th>7</th>
+		{#each [1, 2, 3, 4, 5, 6, 7] as column}
+			<th class="cell-container">{column}</th>
+		{/each}
 	</tr>
 	{#each $store.board.toReversed() as row}
 		<tr>
 			{#each row as cell, columnIndex}
-				<td on:click={() => handleColumnClick(columnIndex)}>
-					<div class="cell" class:player1={cell === 0} class:player2={cell === 1}>
+				<td class="cell-container">
+					<div
+						class="cell"
+						class:player1={cell === 0}
+						class:player2={cell === 1}
+						data-column={columnIndex}
+						on:click={handleColumnInput}
+						on:keydown={handleColumnInput}
+						tabindex="0"
+						role="button"
+						style:margin="auto"
+					>
 						{makeC4BoardCellString(cell)}
 					</div>
 				</td>
@@ -98,7 +119,7 @@
 </table>
 
 {#if $store.winner !== undefined}
-	<p>Player {$store.winner + 1} wins!</p>
+	<p>Player {makeC4PlayerString($store.winner)} wins!</p>
 {/if}
 
 <style>
@@ -118,5 +139,9 @@
 
 	.cell.player2 {
 		background-color: var(--color-p2);
+	}
+
+	th {
+		text-align: center;
 	}
 </style>
