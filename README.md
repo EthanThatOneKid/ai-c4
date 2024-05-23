@@ -2,6 +2,8 @@
 
 Connect 4 AI SvelteKit user interface.
 
+![Game Screenshot](https://github.com/EthanThatOneKid/ai-c4/assets/31261035/772fb370-552e-41eb-83b0-94212919e10e)
+
 ## Developing
 
 Once you've installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
