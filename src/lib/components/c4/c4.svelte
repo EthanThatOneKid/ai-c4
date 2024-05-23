@@ -14,24 +14,22 @@
 
 <p>Artificially intelligent Connect 4.</p>
 
-<hr />
-
 <h2>Settings</h2>
 
 <Settings />
 
-<hr />
-
 <h2>Logs</h2>
 
 <Logs />
-
-<hr />
 
 <footer>
 	<p>
 		<a href="https://github.com/EthanThatOneKid/ai-c4" target="_blank" rel="noopener noreferrer">
 			Source code
 		</a>
+		by
+		<a href="https://etok.codes/" target="_blank" rel="noopener noreferrer"
+			><strong>@EthanThatOneKid</strong></a
+		>
 	</p>
 </footer>

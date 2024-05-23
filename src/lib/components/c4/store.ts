@@ -17,7 +17,7 @@ const DEFAULT_SETTINGS = [
 		color: '#ff0000'
 	},
 	{
-		type: C4PlayerType.RANDOM,
+		type: C4PlayerType.AI,
 		color: '#ffff00'
 	}
 ] satisfies C4['settings'];

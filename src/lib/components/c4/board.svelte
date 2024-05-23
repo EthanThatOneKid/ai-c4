@@ -5,34 +5,36 @@
 		C4PlayerType,
 		makeC4BoardCellString,
 		getPossibleColumns,
-		connects4
+		connects4,
+		makeC4PlayerString
 	} from '$lib/c4';
+	import { minimax } from '$lib/c4/ai';
 	import { restart, store } from './store';
 
-	function confirmGameOverRestart(): boolean {
-		if ($store.winner !== undefined) {
-			const willRestart = confirm(`Player ${$store.winner + 1} wins! Restart?`);
-			if (willRestart) {
-				restart();
-			}
-
-			return true;
+	// TODO: Fix confirmGameOverRestart bug.
+	function confirmGameOverRestart() {
+		if ($store.winner === undefined) {
+			throw new Error('No winner found');
 		}
 
-		return false;
+		const willRestart = confirm(`Player ${makeC4PlayerString($store.winner)} wins! Restart?`);
+		if (willRestart) {
+			setTimeout(restart, 0);
+		}
 	}
 
 	function handleColumnClick(column: number) {
-		if (confirmGameOverRestart()) {
+		if ($store.winner !== undefined) {
+			confirmGameOverRestart();
 			return;
 		}
 
 		const player = getNextPlayer($store.logs);
-		$store.logs.push({ column, player });
+		$store.logs.push({ column, player, playerType: $store.settings[player].type });
 		$store.board = drop($store.board, column, player);
 		if (connects4($store.board, player)) {
 			$store.winner = player;
-			setTimeout(() => confirmGameOverRestart(), 0);
+			setTimeout(confirmGameOverRestart, 0);
 		}
 	}
 
@@ -49,18 +51,24 @@
 			}
 
 			case C4PlayerType.AI: {
-				throw new Error('Not implemented');
+				const [bestColumn] = minimax($store.board);
+				if (bestColumn === null) {
+					throw new Error('No best column found');
+				}
+
+				handleColumnClick(bestColumn);
+				break;
 			}
 
 			case C4PlayerType.RANDOM: {
 				const columns = getPossibleColumns($store.board);
 				if (columns.length === 0) {
-					console.table($store.board);
 					throw new Error('No available columns');
 				}
 
 				const randomColumn = columns[Math.floor(Math.random() * columns.length)];
 				handleColumnClick(randomColumn);
+				break;
 			}
 		}
 	});
