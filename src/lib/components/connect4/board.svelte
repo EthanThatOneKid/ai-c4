@@ -77,6 +77,10 @@
 	{/each}
 </table>
 
+{#if $store.winner !== undefined}
+	<p>Player {$store.winner + 1} wins!</p>
+{/if}
+
 <style>
 	.cell {
 		display: grid;

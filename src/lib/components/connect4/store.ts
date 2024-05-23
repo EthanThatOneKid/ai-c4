@@ -2,7 +2,7 @@ import { writable } from 'svelte/store';
 import type { Connect4 } from '$lib/connect4';
 import { Connect4PlayerType, makeEmptyConnect4Board } from '$lib/connect4';
 
-export function resetStore() {
+export function restart() {
 	store.update((store) => {
 		store.board = makeEmptyConnect4Board();
 		store.logs = [];

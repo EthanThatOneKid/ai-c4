@@ -13,6 +13,10 @@ export function getAvailableColumns(board: Connect4Board): number[] {
 	return columns;
 }
 
+export function checkColumnAvailability(board: Connect4Board, column: number): boolean {
+	return board[board.length - 1][column] === -1;
+}
+
 export function drop(board: Connect4Board, column: number, player: Connect4Player): Connect4Board {
 	if (column < 0 || column > 6) {
 		throw new Error(`Invalid column: ${column}`);

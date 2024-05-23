@@ -1,6 +1,6 @@
 <script lang="ts">
 	import SettingsTr from './settings_tr.svelte';
-	import { resetStore } from './store';
+	import { restart } from './store';
 </script>
 
 <table>
@@ -16,4 +16,4 @@
 	<SettingsTr player={1} />
 </table>
 
-<button on:click={() => resetStore()}> Reset </button>
+<button on:click={() => restart()}>Restart Game</button>
