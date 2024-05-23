@@ -10,6 +10,10 @@ export function makeEmptyConnect4Board(): Connect4Board {
 	return Array.from({ length: 6 }, () => Array.from({ length: 7 }, () => 0));
 }
 
+export function makeEmptyConnect4Bitmap(): Connect4Bitmap {
+	return { position: 0, mask: 0 };
+}
+
 export function makeConnect4Bitmap(board: Connect4Board, player: number): Connect4Bitmap {
 	let position = '';
 	let mask = '';
@@ -26,17 +30,24 @@ export function makeConnect4Bitmap(board: Connect4Board, player: number): Connec
 }
 
 export function makeConnect4Board(bitmap: Connect4Bitmap): Connect4Board {
-	const board = Array.from({ length: 6 }, () => Array.from({ length: 7 }, () => 0));
-	const position = bitmap.position.toString(2).padStart(42, '0');
 	const mask = bitmap.mask.toString(2).padStart(49, '0');
-	for (let j = 6; j >= 0; j--) {
-		for (let i = 0; i < 6; i++) {
+	const position = bitmap.position.toString(2).padStart(42, '0');
+	return Array.from({ length: 6 }, (_, i) =>
+		Array.from({ length: 7 }, (_, j) => {
 			const index = i + j * 6;
-			board[i][j] = position[index] === '1' ? 1 : 2;
-		}
-	}
+			return mask[index] === '1' ? 1 : position[index] === '1' ? 2 : 0;
+		})
+	);
+	// // const position = bitmap.position.toString(2).padStart(42, '0');
+	// const mask = bitmap.mask.toString(2).padStart(49, '0');
+	// for (let j = 6; j >= 0; j--) {
+	// 	for (let i = 0; i < 6; i++) {
+	// 		const index = i + j * 6;
+	// 		board[i][j] = position[index] === '1' ? 1 : 2;
+	// 	}
+	// }
 
-	return board;
+	// return board;
 }
 
 export function connects4(position: number): boolean {
@@ -77,6 +88,10 @@ export interface Connect4 {
 }
 
 export function getNextPlayer(logs: Connect4Drop[]): Connect4Player {
+	if (logs.length === 0) {
+		return Connect4Player.ONE;
+	}
+
 	return logs[logs.length - 1].player === Connect4Player.ONE
 		? Connect4Player.TWO
 		: Connect4Player.ONE;

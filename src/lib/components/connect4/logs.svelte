@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { makeConnect4PlayerString } from '$lib/connect4';
-	import { connect4Store } from './store';
+	import { store } from './store';
 </script>
 
 <table>
@@ -12,7 +12,7 @@
 		</tr>
 	</thead>
 
-	{#each $connect4Store.logs as { column, player }, index}
+	{#each $store.logs as { column, player }, index}
 		<tr>
 			<td>{index + 1}</td>
 			<td>{makeConnect4PlayerString(player)}</td>

@@ -6,15 +6,15 @@
 		getAvailableColumnsOfBitmap,
 		Connect4PlayerType
 	} from '$lib/connect4';
-	import { connect4Store } from './store';
+	import { store } from './store';
 
 	function handleColumnClick(column: number) {
-		$connect4Store.bitmap = drop($connect4Store.bitmap, column);
-		const player = getNextPlayer($connect4Store.logs);
-		$connect4Store.logs.push({ column, player });
+		$store.bitmap = drop($store.bitmap, column);
+		const player = getNextPlayer($store.logs);
+		$store.logs.push({ column, player });
 
-		const nextPlayer = getNextPlayer($connect4Store.logs);
-		const nextPlayerType = $connect4Store.settings[nextPlayer].type;
+		const nextPlayer = getNextPlayer($store.logs);
+		const nextPlayerType = $store.settings[nextPlayer].type;
 		switch (nextPlayerType) {
 			case Connect4PlayerType.USER: {
 				break;
@@ -25,7 +25,7 @@
 			}
 
 			case Connect4PlayerType.RANDOM: {
-				const columns = getAvailableColumnsOfBitmap($connect4Store.bitmap);
+				const columns = getAvailableColumnsOfBitmap($store.bitmap);
 				if (columns.length === 0) {
 					throw new Error('No available columns');
 				}
@@ -37,11 +37,8 @@
 	}
 </script>
 
-<table
-	style:--color-p1={$connect4Store.settings[0].color}
-	style:--color-p2={$connect4Store.settings[1].color}
->
-	{#each makeConnect4Board($connect4Store.bitmap) as row}
+<table style:--color-p1={$store.settings[0].color} style:--color-p2={$store.settings[1].color}>
+	{#each makeConnect4Board($store.bitmap) as row}
 		<tr>
 			{#each row as cell, columnIndex}
 				<td on:click={() => handleColumnClick(columnIndex)}>
@@ -59,15 +56,15 @@
 		width: 2rem;
 		height: 2rem;
 		border-radius: 50%;
+		outline: 1px solid black;
+		cursor: pointer;
 	}
 
 	.cell.player1 {
 		background-color: var(--color-p1);
-		outline: 1px solid black;
 	}
 
 	.cell.player2 {
 		background-color: var(--color-p2);
-		outline: 1px solid black;
 	}
 </style>

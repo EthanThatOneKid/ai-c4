@@ -1,9 +1,9 @@
 import { writable } from 'svelte/store';
 import type { Connect4 } from '$lib/connect4';
-import { Connect4PlayerType } from '$lib/connect4';
+import { Connect4PlayerType, makeEmptyConnect4Bitmap } from '$lib/connect4';
 
-export const connect4Store = writable<Connect4>({
-	bitmap: { position: 0, mask: 0 },
+export const store = writable<Connect4>({
+	bitmap: makeEmptyConnect4Bitmap(),
 	settings: [
 		{
 			type: Connect4PlayerType.USER,
