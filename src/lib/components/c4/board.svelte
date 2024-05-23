@@ -4,7 +4,7 @@
 		getNextPlayer,
 		C4PlayerType,
 		makeC4BoardCellString,
-		getAvailableColumns,
+		getPossibleColumns,
 		connects4
 	} from '$lib/c4';
 	import { restart, store } from './store';
@@ -53,7 +53,7 @@
 			}
 
 			case C4PlayerType.RANDOM: {
-				const columns = getAvailableColumns($store.board);
+				const columns = getPossibleColumns($store.board);
 				if (columns.length === 0) {
 					console.table($store.board);
 					throw new Error('No available columns');

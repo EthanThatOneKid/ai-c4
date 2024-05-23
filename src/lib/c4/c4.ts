@@ -2,7 +2,7 @@ export function makeEmptyC4Board(): C4Board {
 	return Array.from({ length: 6 }, () => Array.from({ length: 7 }, () => -1));
 }
 
-export function getAvailableColumns(board: C4Board): number[] {
+export function getPossibleColumns(board: C4Board): number[] {
 	const columns: number[] = [];
 	for (let column = 0; column < 7; column++) {
 		if (board[board.length - 1][column] === -1) {

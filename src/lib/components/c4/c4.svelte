@@ -4,13 +4,15 @@
 	import Logs from './logs.svelte';
 </script>
 
-<h1>Connect 4 AI</h1>
-
-<hr />
-
-<h2>Board</h2>
+<h1>
+	<a href="https://github.com/EthanThatOneKid/ai-c4" target="_blank" rel="noopener noreferrer">
+		EthanThatOneKid/ai-c4
+	</a>
+</h1>
 
 <Board />
+
+<p>Artificially intelligent Connect 4.</p>
 
 <hr />
 
