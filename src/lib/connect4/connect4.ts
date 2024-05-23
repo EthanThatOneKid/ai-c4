@@ -1,100 +1,123 @@
-export function getAvailableColumnsOfBitmap(bitmap: Connect4Bitmap): number[] {
-	return getAvailableColumns(makeConnect4Board(bitmap));
+export function makeEmptyConnect4Board(): Connect4Board {
+	return Array.from({ length: 6 }, () => Array.from({ length: 7 }, () => -1));
 }
 
 export function getAvailableColumns(board: Connect4Board): number[] {
-	return board[0].map((_, i) => i).filter((i) => board[5][i] === 0);
-}
-
-export function makeEmptyConnect4Board(): Connect4Board {
-	return Array.from({ length: 6 }, () => Array.from({ length: 7 }, () => 0));
-}
-
-export function makeEmptyConnect4Bitmap(): Connect4Bitmap {
-	return { position: 0, mask: 0 };
-}
-
-export function makeConnect4Bitmap(board: Connect4Board, player: number): Connect4Bitmap {
-	let position = '';
-	let mask = '';
-	for (let j = 6; j >= 0; j--) {
-		mask += '0';
-		position += '0';
-		for (let i = 0; i < 6; i++) {
-			mask += ['0', '1'][board[i][j] === 0 ? 0 : 1];
-			position += ['0', '1'][board[i][j] !== player ? 0 : 1];
+	const columns: number[] = [];
+	for (let column = 0; column < 7; column++) {
+		if (board[board.length - 1][column] === -1) {
+			columns.push(column);
 		}
 	}
 
-	return { position: parseInt(position, 2), mask: parseInt(mask, 2) };
+	return columns;
 }
 
-export function makeConnect4Board(bitmap: Connect4Bitmap): Connect4Board {
-	const mask = bitmap.mask.toString(2).padStart(49, '0');
-	const position = bitmap.position.toString(2).padStart(42, '0');
-	return Array.from({ length: 6 }, (_, i) =>
-		Array.from({ length: 7 }, (_, j) => {
-			const index = i + j * 6;
-			return mask[index] === '1' ? 1 : position[index] === '1' ? 2 : 0;
-		})
+export function drop(board: Connect4Board, column: number, player: Connect4Player): Connect4Board {
+	if (column < 0 || column > 6) {
+		throw new Error(`Invalid column: ${column}`);
+	}
+
+	const newBoard = board.map((row) => row.slice());
+	const row = newBoard.findIndex((row) => row[column] === -1);
+	if (row === -1) {
+		throw new Error(`Column ${column} is full`);
+	}
+
+	newBoard[row][column] = player;
+	return newBoard;
+}
+
+export function connects4(board: Connect4Board, player: Connect4Player): boolean {
+	return (
+		connects4Horizontal(board, player) ||
+		connects4Vertical(board, player) ||
+		connects4Diagonal(board, player)
 	);
-	// // const position = bitmap.position.toString(2).padStart(42, '0');
-	// const mask = bitmap.mask.toString(2).padStart(49, '0');
-	// for (let j = 6; j >= 0; j--) {
-	// 	for (let i = 0; i < 6; i++) {
-	// 		const index = i + j * 6;
-	// 		board[i][j] = position[index] === '1' ? 1 : 2;
-	// 	}
-	// }
-
-	// return board;
 }
 
-export function connects4(position: number): boolean {
-	let m = position & (position >> 7);
-	if (m & (m >> 14)) {
-		return true;
-	}
-
-	m = position & (position >> 6);
-	if (m & (m >> 12)) {
-		return true;
-	}
-
-	m = position & (position >> 8);
-	if (m & (m >> 16)) {
-		return true;
-	}
-
-	m = position & (position >> 1);
-	if (m & (m >> 2)) {
-		return true;
+export function connects4Horizontal(board: Connect4Board, player: Connect4Player): boolean {
+	for (let row = 0; row < 6; row++) {
+		for (let col = 0; col < 4; col++) {
+			if (
+				board[row][col] === player &&
+				board[row][col + 1] === player &&
+				board[row][col + 2] === player &&
+				board[row][col + 3] === player
+			) {
+				return true;
+			}
+		}
 	}
 
 	return false;
 }
 
-export function drop(bitmask: Connect4Bitmap, column: number): Connect4Bitmap {
-	return {
-		position: bitmask.position ^ bitmask.mask,
-		mask: bitmask.mask | (bitmask.mask + (1 << (column * 7)))
-	};
+export function connects4Vertical(board: Connect4Board, player: Connect4Player): boolean {
+	for (let row = 0; row < 3; row++) {
+		for (let col = 0; col < 7; col++) {
+			if (
+				board[row][col] === player &&
+				board[row + 1][col] === player &&
+				board[row + 2][col] === player &&
+				board[row + 3][col] === player
+			) {
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+export function connects4Diagonal(board: Connect4Board, player: Connect4Player): boolean {
+	for (let row = 0; row < 3; row++) {
+		for (let col = 0; col < 4; col++) {
+			if (
+				board[row][col] === player &&
+				board[row + 1][col + 1] === player &&
+				board[row + 2][col + 2] === player &&
+				board[row + 3][col + 3] === player
+			) {
+				return true;
+			}
+		}
+	}
+
+	for (let row = 0; row < 3; row++) {
+		for (let col = 3; col < 7; col++) {
+			if (
+				board[row][col] === player &&
+				board[row + 1][col - 1] === player &&
+				board[row + 2][col - 2] === player &&
+				board[row + 3][col - 3] === player
+			) {
+				return true;
+			}
+		}
+	}
+
+	return false;
 }
 
 export interface Connect4 {
-	bitmap: Connect4Bitmap;
+	board: Connect4Board;
 	logs: Connect4Drop[];
+	winner?: Connect4Player;
 	settings: [Connect4PlayerSettings, Connect4PlayerSettings];
 }
 
 export function getNextPlayer(logs: Connect4Drop[]): Connect4Player {
-	if (logs.length === 0) {
-		return Connect4Player.ONE;
+	const currentPlayer = getRecentDrop(logs)?.player;
+	if (currentPlayer === undefined) {
+		return 0;
 	}
 
-	return logs[logs.length - 1].player === Connect4Player.ONE
-		? Connect4Player.TWO
-		: Connect4Player.ONE;
+	return ((currentPlayer + 1) % 2) as Connect4Player;
+}
+
+export function getRecentDrop(logs: Connect4Drop[]): Connect4Drop | undefined {
+	return logs.at(-1);
 }
 
 /**
@@ -107,14 +130,23 @@ export interface Connect4Drop {
 	column?: number;
 }
 
-export function makeConnect4PlayerString(player: Connect4Player): string {
-	return player === Connect4Player.ONE ? '1' : '2';
+export function makeConnect4BoardCellString(cell: Connect4BoardCell): string {
+	if (cell === -1) {
+		return '';
+	}
+
+	return makeConnect4PlayerString(cell);
 }
 
-export enum Connect4Player {
-	ONE = 0,
-	TWO = 1
+export type Connect4Board = Connect4BoardCell[][];
+
+export type Connect4BoardCell = Connect4Player | -1;
+
+export function makeConnect4PlayerString(player: Connect4Player): string {
+	return ['1', '2'][player];
 }
+
+export type Connect4Player = 0 | 1;
 
 export interface Connect4PlayerSettings {
 	type: Connect4PlayerType;
@@ -125,11 +157,4 @@ export enum Connect4PlayerType {
 	USER = 'user',
 	AI = 'ai',
 	RANDOM = 'random'
-}
-
-export type Connect4Board = number[][];
-
-export interface Connect4Bitmap {
-	position: number;
-	mask: number;
 }

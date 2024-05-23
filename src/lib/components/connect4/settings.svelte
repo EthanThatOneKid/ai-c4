@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { Connect4Player } from '$lib/connect4';
 	import SettingsTr from './settings_tr.svelte';
+	import { resetStore } from './store';
 </script>
 
 <table>
@@ -12,6 +12,8 @@
 		</tr>
 	</thead>
 
-	<SettingsTr player={Connect4Player.ONE} />
-	<SettingsTr player={Connect4Player.TWO} />
+	<SettingsTr player={0} />
+	<SettingsTr player={1} />
 </table>
+
+<button on:click={() => resetStore()}> Reset </button>

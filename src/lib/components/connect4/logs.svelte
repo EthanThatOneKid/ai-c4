@@ -24,5 +24,9 @@
 				{/if}
 			</td>
 		</tr>
+	{:else}
+		<tr>
+			<td colspan="3" align="center">No logs</td>
+		</tr>
 	{/each}
 </table>

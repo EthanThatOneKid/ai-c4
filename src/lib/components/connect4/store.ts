@@ -1,18 +1,29 @@
 import { writable } from 'svelte/store';
 import type { Connect4 } from '$lib/connect4';
-import { Connect4PlayerType, makeEmptyConnect4Bitmap } from '$lib/connect4';
+import { Connect4PlayerType, makeEmptyConnect4Board } from '$lib/connect4';
+
+export function resetStore() {
+	store.update((store) => {
+		store.board = makeEmptyConnect4Board();
+		store.logs = [];
+		delete store.winner;
+		return store;
+	});
+}
+
+const DEFAULT_SETTINGS = [
+	{
+		type: Connect4PlayerType.USER,
+		color: '#ff0000'
+	},
+	{
+		type: Connect4PlayerType.RANDOM,
+		color: '#ffff00'
+	}
+] satisfies Connect4['settings'];
 
 export const store = writable<Connect4>({
-	bitmap: makeEmptyConnect4Bitmap(),
-	settings: [
-		{
-			type: Connect4PlayerType.USER,
-			color: '#ff0000'
-		},
-		{
-			type: Connect4PlayerType.AI,
-			color: '#ffff00'
-		}
-	],
+	board: makeEmptyConnect4Board(),
+	settings: DEFAULT_SETTINGS,
 	logs: []
 });
