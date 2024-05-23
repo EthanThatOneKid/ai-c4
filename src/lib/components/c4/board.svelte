@@ -87,7 +87,7 @@
 	{#each $store.board.toReversed() as row}
 		<tr>
 			{#each row as cell, columnIndex}
-				<td on:pointerup={() => handleColumnClick(columnIndex)}>
+				<td on:pointerdown={() => handleColumnClick(columnIndex)}>
 					<div class="cell" class:player1={cell === 0} class:player2={cell === 1}>
 						{makeC4BoardCellString(cell)}
 					</div>
