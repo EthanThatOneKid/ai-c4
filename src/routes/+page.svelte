@@ -3,7 +3,12 @@
 </script>
 
 <svelte:head>
-	<title>Connect 4 AI | etok.codes/connect4-ai</title>
+	<title>Connect 4 AI | etok.codes/ai-c4</title>
+	<link
+		rel="stylesheet"
+		type="text/css"
+		href="https://ethanthatonekid.github.io/dropin-minimal-css/min/axist.min.css"
+	/>
 </svelte:head>
 
 <main>

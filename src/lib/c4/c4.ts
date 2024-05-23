@@ -148,6 +148,7 @@ export function getRecentDrop(logs: C4Drop[]): C4Drop | undefined {
  */
 export interface C4Drop {
 	player: C4Player;
+	playerType: C4PlayerType;
 	column?: number;
 }
 
@@ -172,6 +173,14 @@ export type C4Player = 0 | 1;
 export interface C4PlayerSettings {
 	type: C4PlayerType;
 	color: string;
+}
+
+export function makeC4PlayerTypeString(playerType: C4PlayerType): string {
+	return {
+		[C4PlayerType.USER]: 'User',
+		[C4PlayerType.AI]: 'Alpha Beta Pruning',
+		[C4PlayerType.RANDOM]: 'Random'
+	}[playerType];
 }
 
 export enum C4PlayerType {

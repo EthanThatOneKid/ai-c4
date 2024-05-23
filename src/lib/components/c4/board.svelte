@@ -29,7 +29,7 @@
 		}
 
 		const player = getNextPlayer($store.logs);
-		$store.logs.push({ column, player });
+		$store.logs.push({ column, player, playerType: $store.settings[player].type });
 		$store.board = drop($store.board, column, player);
 		if (connects4($store.board, player)) {
 			$store.winner = player;

@@ -7,7 +7,7 @@
 	<thead>
 		<tr>
 			<th>Player</th>
-			<th>Type</th>
+			<th>Player type</th>
 			<th>Color</th>
 		</tr>
 	</thead>
