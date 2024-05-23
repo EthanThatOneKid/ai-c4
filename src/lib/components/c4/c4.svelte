@@ -28,11 +28,7 @@
 
 <footer>
 	<p>
-		<a
-			href="https://github.com/EthanThatOneKid/connect4-ai"
-			target="_blank"
-			rel="noopener noreferrer"
-		>
+		<a href="https://github.com/EthanThatOneKid/ai-c4" target="_blank" rel="noopener noreferrer">
 			Source code
 		</a>
 	</p>

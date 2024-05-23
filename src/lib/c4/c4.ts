@@ -1,8 +1,8 @@
-export function makeEmptyConnect4Board(): Connect4Board {
+export function makeEmptyC4Board(): C4Board {
 	return Array.from({ length: 6 }, () => Array.from({ length: 7 }, () => -1));
 }
 
-export function getAvailableColumns(board: Connect4Board): number[] {
+export function getAvailableColumns(board: C4Board): number[] {
 	const columns: number[] = [];
 	for (let column = 0; column < 7; column++) {
 		if (board[board.length - 1][column] === -1) {
@@ -13,11 +13,11 @@ export function getAvailableColumns(board: Connect4Board): number[] {
 	return columns;
 }
 
-export function checkColumnAvailability(board: Connect4Board, column: number): boolean {
+export function checkColumnAvailability(board: C4Board, column: number): boolean {
 	return board[board.length - 1][column] === -1;
 }
 
-export function drop(board: Connect4Board, column: number, player: Connect4Player): Connect4Board {
+export function drop(board: C4Board, column: number, player: C4Player): C4Board {
 	if (column < 0 || column > 6) {
 		throw new Error(`Invalid column: ${column}`);
 	}
@@ -32,7 +32,7 @@ export function drop(board: Connect4Board, column: number, player: Connect4Playe
 	return newBoard;
 }
 
-export function connects4(board: Connect4Board, player: Connect4Player): boolean {
+export function connects4(board: C4Board, player: C4Player): boolean {
 	return (
 		connects4Horizontal(board, player) ||
 		connects4Vertical(board, player) ||
@@ -40,7 +40,7 @@ export function connects4(board: Connect4Board, player: Connect4Player): boolean
 	);
 }
 
-export function connects4Horizontal(board: Connect4Board, player: Connect4Player): boolean {
+export function connects4Horizontal(board: C4Board, player: C4Player): boolean {
 	for (let row = 0; row < 6; row++) {
 		for (let col = 0; col < 4; col++) {
 			if (
@@ -57,7 +57,7 @@ export function connects4Horizontal(board: Connect4Board, player: Connect4Player
 	return false;
 }
 
-export function connects4Vertical(board: Connect4Board, player: Connect4Player): boolean {
+export function connects4Vertical(board: C4Board, player: C4Player): boolean {
 	for (let row = 0; row < 3; row++) {
 		for (let col = 0; col < 7; col++) {
 			if (
@@ -74,7 +74,7 @@ export function connects4Vertical(board: Connect4Board, player: Connect4Player):
 	return false;
 }
 
-export function connects4Diagonal(board: Connect4Board, player: Connect4Player): boolean {
+export function connects4Diagonal(board: C4Board, player: C4Player): boolean {
 	for (let row = 0; row < 3; row++) {
 		for (let col = 0; col < 4; col++) {
 			if (
@@ -104,61 +104,60 @@ export function connects4Diagonal(board: Connect4Board, player: Connect4Player):
 	return false;
 }
 
-// TODO: Rename to C4.
-export interface Connect4 {
-	board: Connect4Board;
-	logs: Connect4Drop[];
-	winner?: Connect4Player;
-	settings: [Connect4PlayerSettings, Connect4PlayerSettings];
+export interface C4 {
+	board: C4Board;
+	logs: C4Drop[];
+	winner?: C4Player;
+	settings: [C4PlayerSettings, C4PlayerSettings];
 }
 
-export function getNextPlayer(logs: Connect4Drop[]): Connect4Player {
+export function getNextPlayer(logs: C4Drop[]): C4Player {
 	const currentPlayer = getRecentDrop(logs)?.player;
 	if (currentPlayer === undefined) {
 		return 0;
 	}
 
-	return ((currentPlayer + 1) % 2) as Connect4Player;
+	return ((currentPlayer + 1) % 2) as C4Player;
 }
 
-export function getRecentDrop(logs: Connect4Drop[]): Connect4Drop | undefined {
+export function getRecentDrop(logs: C4Drop[]): C4Drop | undefined {
 	return logs.at(-1);
 }
 
 /**
- * Connect4Drop is a player's turn in the game.
+ * C4Drop is a player's turn in the game.
  *
  * An undefined column value indicates that the player forfeits the game.
  */
-export interface Connect4Drop {
-	player: Connect4Player;
+export interface C4Drop {
+	player: C4Player;
 	column?: number;
 }
 
-export function makeConnect4BoardCellString(cell: Connect4BoardCell): string {
+export function makeC4BoardCellString(cell: C4BoardCell): string {
 	if (cell === -1) {
 		return '';
 	}
 
-	return makeConnect4PlayerString(cell);
+	return makeC4PlayerString(cell);
 }
 
-export type Connect4Board = Connect4BoardCell[][];
+export type C4Board = C4BoardCell[][];
 
-export type Connect4BoardCell = Connect4Player | -1;
+export type C4BoardCell = C4Player | -1;
 
-export function makeConnect4PlayerString(player: Connect4Player): string {
+export function makeC4PlayerString(player: C4Player): string {
 	return ['1', '2'][player];
 }
 
-export type Connect4Player = 0 | 1;
+export type C4Player = 0 | 1;
 
-export interface Connect4PlayerSettings {
-	type: Connect4PlayerType;
+export interface C4PlayerSettings {
+	type: C4PlayerType;
 	color: string;
 }
 
-export enum Connect4PlayerType {
+export enum C4PlayerType {
 	USER = 'user',
 	AI = 'ai',
 	RANDOM = 'random'

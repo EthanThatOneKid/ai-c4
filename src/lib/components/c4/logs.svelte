@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { makeConnect4PlayerString } from '$lib/connect4';
+	import { makeC4PlayerString } from '$lib/c4';
 	import { store } from './store';
 </script>
 
@@ -15,7 +15,7 @@
 	{#each $store.logs as { column, player }, index}
 		<tr>
 			<td>{index + 1}</td>
-			<td>{makeConnect4PlayerString(player)}</td>
+			<td>{makeC4PlayerString(player)}</td>
 			<td>
 				{#if column === undefined}
 					Forfeit

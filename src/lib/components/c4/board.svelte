@@ -2,16 +2,28 @@
 	import {
 		drop,
 		getNextPlayer,
-		Connect4PlayerType,
-		makeConnect4BoardCellString,
+		C4PlayerType,
+		makeC4BoardCellString,
 		getAvailableColumns,
 		connects4
-	} from '$lib/connect4';
-	import { store } from './store';
+	} from '$lib/c4';
+	import { restart, store } from './store';
+
+	function confirmGameOverRestart(): boolean {
+		if ($store.winner !== undefined) {
+			const willRestart = confirm(`Player ${$store.winner + 1} wins! Restart?`);
+			if (willRestart) {
+				restart();
+			}
+
+			return true;
+		}
+
+		return false;
+	}
 
 	function handleColumnClick(column: number) {
-		if ($store.winner !== undefined) {
-			alert(`Player ${$store.winner + 1} has already won!`);
+		if (confirmGameOverRestart()) {
 			return;
 		}
 
@@ -20,7 +32,7 @@
 		$store.board = drop($store.board, column, player);
 		if (connects4($store.board, player)) {
 			$store.winner = player;
-			alert(`Player ${player + 1} wins!`);
+			setTimeout(() => confirmGameOverRestart(), 0);
 		}
 	}
 
@@ -32,15 +44,15 @@
 		const player = getNextPlayer($store.logs);
 		const playerType = $store.settings[player].type;
 		switch (playerType) {
-			case Connect4PlayerType.USER: {
+			case C4PlayerType.USER: {
 				break;
 			}
 
-			case Connect4PlayerType.AI: {
+			case C4PlayerType.AI: {
 				throw new Error('Not implemented');
 			}
 
-			case Connect4PlayerType.RANDOM: {
+			case C4PlayerType.RANDOM: {
 				const columns = getAvailableColumns($store.board);
 				if (columns.length === 0) {
 					console.table($store.board);
@@ -69,7 +81,7 @@
 			{#each row as cell, columnIndex}
 				<td on:click={() => handleColumnClick(columnIndex)}>
 					<div class="cell" class:player1={cell === 0} class:player2={cell === 1}>
-						{makeConnect4BoardCellString(cell)}
+						{makeC4BoardCellString(cell)}
 					</div>
 				</td>
 			{/each}
