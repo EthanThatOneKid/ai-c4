@@ -5,26 +5,27 @@
 		C4PlayerType,
 		makeC4BoardCellString,
 		getPossibleColumns,
-		connects4
+		connects4,
+		makeC4PlayerString
 	} from '$lib/c4';
 	import { minimax } from '$lib/c4/ai';
 	import { restart, store } from './store';
 
-	function confirmGameOverRestart(): boolean {
-		if ($store.winner !== undefined) {
-			const willRestart = confirm(`Player ${$store.winner + 1} wins! Restart?`);
-			if (willRestart) {
-				restart();
-			}
-
-			return true;
+	// TODO: Fix confirmGameOverRestart bug.
+	function confirmGameOverRestart() {
+		if ($store.winner === undefined) {
+			throw new Error('No winner found');
 		}
 
-		return false;
+		const willRestart = confirm(`Player ${makeC4PlayerString($store.winner)} wins! Restart?`);
+		if (willRestart) {
+			setTimeout(restart, 0);
+		}
 	}
 
 	function handleColumnClick(column: number) {
-		if (confirmGameOverRestart()) {
+		if ($store.winner !== undefined) {
+			confirmGameOverRestart();
 			return;
 		}
 
@@ -33,7 +34,7 @@
 		$store.board = drop($store.board, column, player);
 		if (connects4($store.board, player)) {
 			$store.winner = player;
-			setTimeout(() => confirmGameOverRestart(), 0);
+			setTimeout(confirmGameOverRestart, 0);
 		}
 	}
 
@@ -50,7 +51,7 @@
 			}
 
 			case C4PlayerType.AI: {
-				const [bestColumn] = minimax($store.board, 6, -Infinity, Infinity, true);
+				const [bestColumn] = minimax($store.board);
 				if (bestColumn === null) {
 					throw new Error('No best column found');
 				}
