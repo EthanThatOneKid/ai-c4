@@ -7,6 +7,7 @@
 		getPossibleColumns,
 		connects4
 	} from '$lib/c4';
+	import { minimax } from '$lib/c4/ai';
 	import { restart, store } from './store';
 
 	function confirmGameOverRestart(): boolean {
@@ -49,18 +50,24 @@
 			}
 
 			case C4PlayerType.AI: {
-				throw new Error('Not implemented');
+				const [bestColumn] = minimax($store.board, 6, -Infinity, Infinity, true);
+				if (bestColumn === null) {
+					throw new Error('No best column found');
+				}
+
+				handleColumnClick(bestColumn);
+				break;
 			}
 
 			case C4PlayerType.RANDOM: {
 				const columns = getPossibleColumns($store.board);
 				if (columns.length === 0) {
-					console.table($store.board);
 					throw new Error('No available columns');
 				}
 
 				const randomColumn = columns[Math.floor(Math.random() * columns.length)];
 				handleColumnClick(randomColumn);
+				break;
 			}
 		}
 	});

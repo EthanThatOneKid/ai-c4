@@ -11,7 +11,7 @@
 	<td>
 		<select bind:value={$store.settings[player].type}>
 			<option value={C4PlayerType.USER}>User</option>
-			<option value={C4PlayerType.AI}>Artificial Intelligence</option>
+			<option value={C4PlayerType.AI}>Alpha Beta Pruning</option>
 			<option value={C4PlayerType.RANDOM}>Random</option>
 		</select>
 	</td>

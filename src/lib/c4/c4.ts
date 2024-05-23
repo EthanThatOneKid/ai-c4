@@ -13,6 +13,19 @@ export function getPossibleColumns(board: C4Board): number[] {
 	return columns;
 }
 
+export function getColumnRow(board: C4Board, column: number): number {
+	if (column < 0 || column > 6) {
+		throw new Error(`Invalid column: ${column}`);
+	}
+
+	const row = board.findIndex((row) => row[column] === -1);
+	if (row === -1) {
+		throw new Error(`Column ${column} is full`);
+	}
+
+	return row;
+}
+
 export function checkColumnAvailability(board: C4Board, column: number): boolean {
 	return board[board.length - 1][column] === -1;
 }
@@ -117,7 +130,11 @@ export function getNextPlayer(logs: C4Drop[]): C4Player {
 		return 0;
 	}
 
-	return ((currentPlayer + 1) % 2) as C4Player;
+	return besidePlayer(currentPlayer);
+}
+
+export function besidePlayer(player: C4Player): C4Player {
+	return player === 0 ? 1 : 0;
 }
 
 export function getRecentDrop(logs: C4Drop[]): C4Drop | undefined {
