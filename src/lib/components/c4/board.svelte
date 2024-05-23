@@ -9,7 +9,6 @@
 		makeC4PlayerString
 	} from '$lib/c4';
 	import { minimax } from '$lib/c4/ai';
-	import { onMount } from 'svelte';
 	import { restart, store } from './store';
 
 	// TODO: Fix confirmGameOverRestart bug.
@@ -24,18 +23,14 @@
 		}
 	}
 
-	function handleColumnInput(event: PointerEvent) {
-		const element = document.elementFromPoint(event.clientX, event.clientY);
-		if (element === null) {
+	function handleColumnInput(event: MouseEvent) {
+		event.preventDefault();
+		const columnString = (event.target as HTMLElement)?.getAttribute('data-column');
+		if (columnString === null) {
 			return;
 		}
 
-		const columnIndexString = element?.getAttribute('data-column-index');
-		if (columnIndexString === null) {
-			return;
-		}
-
-		const column = parseInt(columnIndexString, 10);
+		const column = parseInt(columnString, 10);
 		if (Number.isNaN(column)) {
 			return;
 		}
@@ -92,14 +87,6 @@
 			}
 		}
 	});
-
-	onMount(() => {
-		document.addEventListener('pointerup', handleColumnInput);
-
-		return () => {
-			document.removeEventListener('pointerup', handleColumnInput);
-		};
-	});
 </script>
 
 <table style:--color-p1={$store.settings[0].color} style:--color-p2={$store.settings[1].color}>
@@ -115,10 +102,16 @@
 	{#each $store.board.toReversed() as row}
 		<tr>
 			{#each row as cell, columnIndex}
-				<td data-column-index={columnIndex}>
-					<div class="cell" class:player1={cell === 0} class:player2={cell === 1}>
+				<td>
+					<button
+						class="cell"
+						class:player1={cell === 0}
+						class:player2={cell === 1}
+						data-column={columnIndex}
+						on:click={handleColumnInput}
+					>
 						{makeC4BoardCellString(cell)}
-					</div>
+					</button>
 				</td>
 			{/each}
 		</tr>
