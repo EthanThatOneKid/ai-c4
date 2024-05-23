@@ -23,7 +23,7 @@
 		}
 	}
 
-	function handleColumnInput(event: MouseEvent) {
+	function handleColumnInput(event: Event) {
 		event.preventDefault();
 		const columnString = (event.target as HTMLElement)?.getAttribute('data-column');
 		if (columnString === null) {
@@ -103,15 +103,18 @@
 		<tr>
 			{#each row as cell, columnIndex}
 				<td>
-					<button
+					<div
 						class="cell"
 						class:player1={cell === 0}
 						class:player2={cell === 1}
 						data-column={columnIndex}
 						on:click={handleColumnInput}
+						on:keydown={handleColumnInput}
+						tabindex="0"
+						role="button"
 					>
 						{makeC4BoardCellString(cell)}
-					</button>
+					</div>
 				</td>
 			{/each}
 		</tr>
